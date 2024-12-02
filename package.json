@@ -1,0 +1,16 @@
+{
+	"name": "split-vendor-chunk-plugin",
+	"version": "1.0.0",
+	"main": "main.js",
+	"keywords": ["vite", "rollup", "chunk", "split", "vendor"],
+	"author": "Roger Vilà <rogervila@me.com>",
+	"license": "MIT",
+	"description": "Vite plugin to split vendor chunks",
+	"scripts": {
+		"test": "mocha test/test.js"
+	},
+	"devDependencies": {
+		"vite": "^6.0.0",
+		"mocha": "^10.2.0"
+	}
+}
