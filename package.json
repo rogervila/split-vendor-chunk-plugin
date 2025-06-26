@@ -1,19 +1,26 @@
 {
     "name": "split-vendor-chunk-plugin",
-    "version": "1.0.0",
+    "version": "7.0.0",
     "main": "main.js",
-    "keywords": ["vite", "rollup", "chunk", "split", "vendor"],
+    "keywords": [
+        "vite",
+        "rollup",
+        "chunk",
+        "split",
+        "vendor",
+        "splitVendorChunkPlugin"
+    ],
     "author": "Roger Vilà <rogervila@me.com>",
     "license": "MIT",
     "description": "Vite plugin to split vendor chunks",
     "scripts": {
         "test": "mocha test/test.js",
-        "format": "npx @biomejs/biome check --write",
+        "format": "npx @biomejs/biome check --write --unsafe",
         "lint": "npx @biomejs/biome ci ."
     },
     "devDependencies": {
-        "@biomejs/biome": "1.9.4",
-        "vite": "^6.3.0",
-        "mocha": "^11.1.0"
+        "@biomejs/biome": "2.0.5",
+        "vite": "^7.0.0",
+        "mocha": "^11.7.1"
     }
 }
