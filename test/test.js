@@ -49,7 +49,9 @@ describe('splitVendorChunkPlugin', () => {
 
         const pluginWithPrefix = splitVendorChunkPlugin({ ...options, prefix: 'myapp-' });
         const configWithPrefix = pluginWithPrefix.config();
-        const resultWithPrefix = configWithPrefix.build.rollupOptions.output.manualChunks('/path/to/node_modules/lodash/index.js');
+        const resultWithPrefix = configWithPrefix.build.rollupOptions.output.manualChunks(
+            '/path/to/node_modules/lodash/index.js',
+        );
         assert.strictEqual(resultWithPrefix, 'myapp-a98bec2c6f7ce1c386856d4d320f1e19c83742f5');
     });
 });

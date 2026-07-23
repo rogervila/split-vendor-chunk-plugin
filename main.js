@@ -20,7 +20,7 @@ function splitVendorChunkPlugin(options = {}) {
 
                                     if (options.anonymize?.algorithm && options.anonymize?.key) {
                                         const crypto = require('node:crypto');
-                                        const hash =  crypto
+                                        const hash = crypto
                                             .createHmac(options.anonymize.algorithm, options.anonymize.key)
                                             .update(value)
                                             .digest('hex');
