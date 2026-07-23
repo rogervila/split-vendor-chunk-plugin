@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('node:assert');
 const splitVendorChunkPlugin = require('../main.js');
 
 describe('splitVendorChunkPlugin', () => {
@@ -22,5 +22,36 @@ describe('splitVendorChunkPlugin', () => {
         // Test non-node_modules path
         const result3 = config.build.rollupOptions.output.manualChunks('/path/to/src/index.js');
         assert.strictEqual(result3, undefined);
+    });
+
+    it('should apply prefix when provided', () => {
+        const options = { prefix: 'myapp-' };
+        const plugin = splitVendorChunkPlugin(options);
+        const config = plugin.config();
+
+        const result = config.build.rollupOptions.output.manualChunks('/path/to/node_modules/@babel/core/index.js');
+        assert.strictEqual(result, 'myapp-@babel/core');
+    });
+
+    it('should anonymize chunk names when options are provided', () => {
+        const options = {
+            anonymize: {
+                algorithm: 'sha1',
+                key: 'my-secret-key',
+            },
+        };
+        const plugin = splitVendorChunkPlugin(options);
+        const config = plugin.config();
+
+        // Test anonymization
+        const result = config.build.rollupOptions.output.manualChunks('/path/to/node_modules/lodash/index.js');
+        assert.strictEqual(result, 'a98bec2c6f7ce1c386856d4d320f1e19c83742f5');
+
+        const pluginWithPrefix = splitVendorChunkPlugin({ ...options, prefix: 'myapp-' });
+        const configWithPrefix = pluginWithPrefix.config();
+        const resultWithPrefix = configWithPrefix.build.rollupOptions.output.manualChunks(
+            '/path/to/node_modules/lodash/index.js',
+        );
+        assert.strictEqual(resultWithPrefix, 'myapp-a98bec2c6f7ce1c386856d4d320f1e19c83742f5');
     });
 });
