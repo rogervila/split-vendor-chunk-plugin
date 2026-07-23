@@ -37,25 +37,6 @@ export default function splitVendorChunkPlugin(options = {}) {
                                     return `${prefix}${value}`;
                                 }
                             },
-                            chunkFileNames(chunkInfo) {
-                                // Anonymize the chunk name if it looks like a vendor chunk
-                                const fileName = chunkInfo.name;
-
-                                if (fileName.startsWith(prefix)) {
-                                    // Already anonymized by manualChunks, just return it
-                                    return `[hash].js`;
-                                }
-
-                                // For non-vendor chunks or dynamic imports that weren't caught
-                                if (options.anonymize?.algorithm && options.anonymize?.key) {
-                                    const anonymized = createHmac(options.anonymize.algorithm, options.anonymize.key)
-                                        .update(fileName)
-                                        .digest('hex');
-                                    return `${prefix}${anonymized}.js`;
-                                }
-
-                                return `${prefix}[hash].js`;
-                            },
                         },
                     },
                 },
