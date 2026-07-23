@@ -130,6 +130,6 @@ dist
 .pnp.*
 
 # Lockfiles
-.pnpm-lock.yaml
+pnpm-lock.yaml
 package-lock.json
 yarn.lock

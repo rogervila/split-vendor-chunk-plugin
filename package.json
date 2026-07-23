@@ -1,6 +1,6 @@
 {
     "name": "split-vendor-chunk-plugin",
-    "version": "7.0.0",
+    "version": "8.0.0",
     "main": "main.js",
     "keywords": [
         "vite",
@@ -18,9 +18,11 @@
         "format": "npx @biomejs/biome check --write --unsafe",
         "lint": "npx @biomejs/biome ci ."
     },
+    "dependencies": {
+        "vite": "^8.0.0"
+    },
     "devDependencies": {
-        "@biomejs/biome": "2.0.5",
-        "vite": "^7.0.0",
-        "mocha": "^11.7.1"
+        "@biomejs/biome": "2.5.5",
+        "mocha": "^11.7.0"
     }
 }
