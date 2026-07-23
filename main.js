@@ -1,7 +1,7 @@
 /**
  * @see https://github.com/rxliuli/liuli-tools/blob/master/archives/vite-plugin-chunk-node-modules/src/index.ts
  *
- * @param {{ anonymize?: undefined | {algorithm?: string, key?: string} }} options
+ * @param {{ anonymize?: undefined | {algorithm?: string, key?: string}, prefix: string | undefined }} options
  * @returns {import('vite').Plugin}
  */
 function splitVendorChunkPlugin(options = {}) {
@@ -20,13 +20,15 @@ function splitVendorChunkPlugin(options = {}) {
 
                                     if (options.anonymize?.algorithm && options.anonymize?.key) {
                                         const crypto = require('node:crypto');
-                                        return crypto
+                                        const hash =  crypto
                                             .createHmac(options.anonymize.algorithm, options.anonymize.key)
                                             .update(value)
                                             .digest('hex');
+
+                                        return `${options.prefix || ''}${hash}`;
                                     }
 
-                                    return value;
+                                    return `${options.prefix || ''}${value}`;
                                 }
                             },
                         },
