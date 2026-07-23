@@ -1,10 +1,12 @@
+import { createHmac } from 'node:crypto';
+
 /**
  * @see https://github.com/rxliuli/liuli-tools/blob/master/archives/vite-plugin-chunk-node-modules/src/index.ts
  *
  * @param {{ anonymize?: undefined | {algorithm?: string, key?: string}, prefix: string | undefined }} options
  * @returns {import('vite').Plugin}
  */
-function splitVendorChunkPlugin(options = {}) {
+export default function splitVendorChunkPlugin(options = {}) {
     /** @type {import('vite').Plugin} */
     return {
         name: 'split-vendor-chunk-plugin',
@@ -16,16 +18,18 @@ function splitVendorChunkPlugin(options = {}) {
                             manualChunks(id) {
                                 if (id.includes('node_modules')) {
                                     const match = /.*node_modules\/((?:@[^\/]+\/)?[^\/]+)/.exec(id);
-                                    const value = match !== null && match.length > 0 ? match[1] : 'vendor';
+                                    const value =
+                                        match !== null && match.length > 0
+                                            ? match[1]
+                                            : `vendor-${createHmac('sha256', id).update(id).digest('hex')}`;
 
                                     if (options.anonymize?.algorithm && options.anonymize?.key) {
-                                        const crypto = require('node:crypto');
-                                        const hash = crypto
-                                            .createHmac(options.anonymize.algorithm, options.anonymize.key)
+                                        return `${options.prefix || ''}${createHmac(
+                                            options.anonymize.algorithm,
+                                            options.anonymize.key,
+                                        )
                                             .update(value)
-                                            .digest('hex');
-
-                                        return `${options.prefix || ''}${hash}`;
+                                            .digest('hex')}`;
                                     }
 
                                     return `${options.prefix || ''}${value}`;
@@ -38,5 +42,3 @@ function splitVendorChunkPlugin(options = {}) {
         },
     };
 }
-
-module.exports = splitVendorChunkPlugin;

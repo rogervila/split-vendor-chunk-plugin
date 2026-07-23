@@ -1,5 +1,5 @@
-const assert = require('node:assert');
-const splitVendorChunkPlugin = require('../main.js');
+import assert from 'node:assert';
+import splitVendorChunkPlugin from '../main.js';
 
 describe('splitVendorChunkPlugin', () => {
     it('should return a plugin with correct name', () => {
