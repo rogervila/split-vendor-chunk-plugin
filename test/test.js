@@ -54,4 +54,25 @@ describe('splitVendorChunkPlugin', () => {
         );
         assert.strictEqual(resultWithPrefix, 'myapp-a98bec2c6f7ce1c386856d4d320f1e19c83742f5');
     });
+
+    it('should anonymize chunk file names when options are provided', () => {
+        const options = {
+            anonymize: {
+                algorithm: 'sha1',
+                key: 'my-secret-key',
+            },
+        };
+        const plugin = splitVendorChunkPlugin(options);
+        const config = plugin.config();
+
+        // Test anonymization for chunk file names
+        const chunkInfo = { name: 'lodash' };
+        const result = config.build.rollupOptions.output.chunkFileNames(chunkInfo);
+        assert.strictEqual(result, '[hash].js');
+
+        const pluginWithPrefix = splitVendorChunkPlugin({ ...options, prefix: 'myapp-' });
+        const configWithPrefix = pluginWithPrefix.config();
+        const resultWithPrefix = configWithPrefix.build.rollupOptions.output.chunkFileNames(chunkInfo);
+        assert.strictEqual(resultWithPrefix, 'myapp-a98bec2c6f7ce1c386856d4d320f1e19c83742f5.js');
+    });
 });

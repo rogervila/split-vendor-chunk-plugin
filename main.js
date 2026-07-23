@@ -7,6 +7,8 @@ import { createHmac } from 'node:crypto';
  * @returns {import('vite').Plugin}
  */
 export default function splitVendorChunkPlugin(options = {}) {
+    const prefix = options.prefix || '';
+
     /** @type {import('vite').Plugin} */
     return {
         name: 'split-vendor-chunk-plugin',
@@ -24,7 +26,7 @@ export default function splitVendorChunkPlugin(options = {}) {
                                             : `vendor-${createHmac('sha256', id).update(id).digest('hex')}`;
 
                                     if (options.anonymize?.algorithm && options.anonymize?.key) {
-                                        return `${options.prefix || ''}${createHmac(
+                                        return `${prefix}${createHmac(
                                             options.anonymize.algorithm,
                                             options.anonymize.key,
                                         )
@@ -32,8 +34,27 @@ export default function splitVendorChunkPlugin(options = {}) {
                                             .digest('hex')}`;
                                     }
 
-                                    return `${options.prefix || ''}${value}`;
+                                    return `${prefix}${value}`;
                                 }
+                            },
+                            chunkFileNames(chunkInfo) {
+                                // Anonymize the chunk name if it looks like a vendor chunk
+                                const fileName = chunkInfo.name;
+
+                                if (fileName.startsWith(prefix)) {
+                                    // Already anonymized by manualChunks, just return it
+                                    return `[hash].js`;
+                                }
+
+                                // For non-vendor chunks or dynamic imports that weren't caught
+                                if (options.anonymize?.algorithm && options.anonymize?.key) {
+                                    const anonymized = createHmac(options.anonymize.algorithm, options.anonymize.key)
+                                        .update(fileName)
+                                        .digest('hex');
+                                    return `${prefix}${anonymized}.js`;
+                                }
+
+                                return `${prefix}[hash].js`;
                             },
                         },
                     },
